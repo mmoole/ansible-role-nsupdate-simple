@@ -1,0 +1,8 @@
+
+# setting up nsupdate on RedHat like systems
+
+- name: install package for nsupdate
+  yum: name={{ item }} state=present update_cache=yes
+  with_items:
+   - bind-utils
+   #- bind

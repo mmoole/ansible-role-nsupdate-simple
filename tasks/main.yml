@@ -1,0 +1,44 @@
+---
+
+# include setting up nsupdate specific to operating system
+- include: "nsupdate-setup-{{ ansible_os_family }}.yml"
+
+# continue to configure nsupdate services
+
+- name: create user for service
+  user:
+    name: "{{ nsupdate_user }}"
+    #groups: "{{ nsupdate_group }}"
+    append: yes
+    shell: /sbin/nologin
+    state: present
+
+- name: create unit file
+  template:
+    src: nsupdate.service.j2
+    dest: /lib/systemd/system/nsupdate.service
+    mode: 0644
+  notify:
+    - reload systemctl
+
+- name: create timer file
+  template:
+    src: nsupdate.timer.j2
+    dest: /lib/systemd/system/nsupdate.timer
+  notify:
+    - restart service
+
+- name: create service script
+  template:
+    src: nsupdate-run.sh.j2
+    dest: "{{ nsupdate_installation_path }}/nsupdate-run.sh"
+    mode: 0644
+    owner: "{{ nsupdate_user }}"
+  notify:
+    - restart service
+
+- name: ensure service is startet on boot
+  service:
+    name: nsupdate.timer
+    state: started
+    enabled: yes

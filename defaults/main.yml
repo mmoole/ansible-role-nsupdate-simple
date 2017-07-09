@@ -1,0 +1,10 @@
+# This directory contains defaults for variables used in roles
+
+# user for running the service as
+nsupdate_user: nsupdate
+
+# default installation path without trailing /
+nsupdate_installation_path: /usr/bin
+
+# time to live for the sent record in seconds. Shoul dbe greater than 60.
+nsupdate_ttl: 86400

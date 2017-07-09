@@ -1,0 +1,12 @@
+---
+
+- name: reload systemctl
+  command: "systemctl daemon-reload"
+  become: yes
+  become_method: sudo
+
+- name: restart service
+  systemd:
+    daemon_reload: yes
+    name: nsupdate.timer
+    state: restarted
